@@ -12,12 +12,7 @@ class App extends Component {
       email: "",
       phoneNumber: "",
       address: "",
-
-      degree: "",
-      schoolName: "",
-      location: "",
-      startDate: "",
-      endDate: "",
+      educations: [],
     };
   }
 
@@ -26,49 +21,82 @@ class App extends Component {
     this.setState({ [key]: e.target.value });
   };
 
+  handleEducationChange = (e) => {};
+
   render() {
-    const {
-      fullName,
-      email,
-      phoneNumber,
-      address,
-      degree,
-      schoolName,
-      location,
-      startDate,
-      endDate,
-    } = this.state;
+    const { fullName, email, phoneNumber, address, educations } = this.state;
     return (
       <div className="app">
         <form action="">
-          <h2>Personal Details</h2>
-          <PersonalDetails
-            onChange={this.handleChange}
-            fullName={fullName}
-            email={email}
-            phoneNumber={phoneNumber}
-            address={address}
-          />
-          <h2>Education</h2>
-          <EducationDetails
-            onChange={this.handleChange}
-            degree={degree}
-            schoolName={schoolName}
-            location={location}
-            startDate={startDate}
-            endDate={endDate}
-          />
+          <div className="personal-details-inputs container">
+            <h2>Personal Details</h2>
+            <PersonalDetails
+              onChange={this.handleChange}
+              fullName={fullName}
+              email={email}
+              phoneNumber={phoneNumber}
+              address={address}
+            />
+          </div>
+          <div className="education-details-container container">
+            <button
+              className="expand-education-details"
+              type="button"
+              onClick={() => {
+                const toggleElems = document.querySelectorAll(".toggle");
+                toggleElems.forEach((elem) => elem.classList.toggle("closed"));
+                const educationInputs =
+                  document.querySelector(".education-inputs");
+                educationInputs.classList.add("closed");
+              }}
+            >
+              <h2 className="education-details-header">
+                <i className="fa-solid fa-graduation-cap" />
+                Education
+              </h2>
+              <i className="fa-solid fa-chevron-up chevron closed toggle"></i>
+            </button>
+            <div className="education-inputs closed toggle">
+              {educations.map((education) => (
+                <EducationDetails
+                  onChange={this.handleEducationChange}
+                  degree={education.degree}
+                  schoolName={education.schoolName}
+                  location={education.location}
+                  startDate={education.startDate}
+                  endDate={education.endDate}
+                />
+              ))}
+            </div>
+            <button
+              className="add-education closed toggle"
+              type="button"
+              onClick={(e) => {
+                const object = {
+                  degree: "",
+                  schoolName: "",
+                  location: "",
+                  startDate: "",
+                  endDate: "",
+                };
+                this.setState({
+                  educations: [...educations, object],
+                });
+              }}
+            >
+              <h4>
+                <i className="fa-solid fa-plus" />
+                Education
+              </h4>
+            </button>
+          </div>
         </form>
         <Resume
           fullName={fullName}
           email={email}
           phoneNumber={phoneNumber}
           address={address}
-          degree={degree}
-          schoolName={schoolName}
-          location={location}
-          startDate={startDate}
-          endDate={endDate}
+          educations={educations}
         />
       </div>
     );
