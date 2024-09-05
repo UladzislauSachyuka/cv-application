@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import './styles/App.css';
 import PersonalDetails from './components/PersonalDetails';
+import EducationDetails from './components/EducationDetails';
 import Resume from './components/Resume';
 
 class App extends Component {
@@ -9,9 +10,17 @@ class App extends Component {
     this.state = {
       personalDetails: {
         fullName: "",
-        email: "beans@beans.com",
+        email: "",
         phoneNumber: "",
         address: "",
+      },
+      educationDetails: {
+        degree: "",
+        schoolName: "",
+        city: "",
+        country: "",
+        startDate: "",
+        endDate: "",
       },
     };
   }
@@ -28,6 +37,7 @@ class App extends Component {
     return (
       <div className="app">
         <form action="">
+          <h2>Personal Details</h2>
           <PersonalDetails
             onChange={this.personalDetailsChange}
             fullName={personalDetails.fullName}
@@ -35,6 +45,8 @@ class App extends Component {
             phoneNumber={personalDetails.phoneNumber}
             address={personalDetails.address}
           />
+          <h2>Education</h2>
+          <EducationDetails />
         </form>
         <Resume personalDetails={personalDetails} />
       </div>
