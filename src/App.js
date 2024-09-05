@@ -1,11 +1,11 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from 'react';
+import './styles/App.css';
+import PersonalDetailsForm from './components/PersonalDetailsForm';
 
-function App() {
-  return (
-    <div className="App">
-    </div>
-  );
+class App extends Component {
+  render() {
+    return <PersonalDetailsForm />
+  }
 }
 
 export default App;
