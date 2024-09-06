@@ -16,15 +16,17 @@ class Resume extends Component {
           phoneNumber={phoneNumber}
           address={address}
         />
-        {educations.map((education) => (
+        { /*educations.map((education) => (
           <EducationInfoSection
             degree={education.degree}
             schoolName={education.schoolName}
             location={education.location}
             startDate={education.startDate}
             endDate={education.endDate}
+            key={education.id}
           />
-        ))}
+        ))} */}
+        <EducationInfoSection educations={educations} />
       </div>
     );
   }
