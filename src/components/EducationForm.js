@@ -13,6 +13,7 @@ class EducationForm extends Component {
       id,
       cancel,
       save,
+      remove,
     } = this.props;
     return (
       <form
@@ -69,12 +70,18 @@ class EducationForm extends Component {
           optional
         />
         <div className="buttons">
-          <button className="cancel" onClick={cancel} type="button">
-            Cancel
+          <button className="delete" onClick={remove} type="button">
+            <i className="fa-solid fa-trash" />
+            Delete
           </button>
-          <button className="save" onClick={save} type="submit">
-            Save
-          </button>
+          <div className="main-buttons">
+            <button className="cancel" onClick={cancel} type="button">
+              Cancel
+            </button>
+            <button className="save" onClick={save} type="submit">
+              Save
+            </button>
+          </div>
         </div>
       </form>
     );
