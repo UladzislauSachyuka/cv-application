@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import './styles/App.css';
 import PersonalDetails from './components/PersonalDetails';
-import EducationForms from './components/EducationForms';
+import AddEducationSection from './components/AddEducationSection';
 import Resume from './components/Resume';
 import uniqid from "uniqid";
 
@@ -14,6 +14,7 @@ class App extends Component {
       phoneNumber: "",
       address: "",
       educations: [],
+      isEducationClosed: "closed",
     };
   }
 
@@ -33,8 +34,38 @@ class App extends Component {
     this.setState({ educations: modified });
   };
 
+  createEducationForm = () => {
+    const { educations } = this.state;
+    const education = {
+      degree: "",
+      schoolName: "",
+      location: "",
+      startDate: "",
+      endDate: "",
+      id: uniqid(),
+    };
+    this.setState({
+      educations: [...educations, education],
+    });
+  };
+
+  toggleEducationClosed = () => {
+    const { isEducationClosed } = this.state;
+    this.setState({
+      isEducationClosed: isEducationClosed ? "" : "closed",
+    });
+  };
+
+
   render() {
-    const { fullName, email, phoneNumber, address, educations } = this.state;
+    const {
+      fullName,
+      email,
+      phoneNumber,
+      address,
+      educations,
+      isEducationClosed,
+    } = this.state;
     return (
       <div className="app">
         <form action="">
@@ -45,50 +76,13 @@ class App extends Component {
             phoneNumber={phoneNumber}
             address={address}
           />
-          <div className="add-education-section container closed">
-            <button
-              className="expand-add-education-section"
-              type="button"
-              onClick={() => {
-                const toggleElems = document.querySelectorAll(".toggle");
-                toggleElems.forEach((elem) => elem.classList.toggle("closed"));
-              }}
-            >
-              <h2 className="add-education-header">
-                <i className="fa-solid fa-graduation-cap" />
-                Education
-              </h2>
-              <i className="fa-solid fa-chevron-up chevron closed toggle"></i>
-            </button>
-            <div className="main-education-content closed toggle">
-              <EducationForms
-                educations={educations}
-                onChange={this.handleEducationChange}
-              />
-              <button
-                className="create-education-form"
-                type="button"
-                onClick={() => {
-                  const object = {
-                    degree: "",
-                    schoolName: "",
-                    location: "",
-                    startDate: "",
-                    endDate: "",
-                    id: uniqid(),
-                  };
-                  this.setState({
-                    educations: [...educations, object],
-                  });
-                }}
-              >
-                <h4 className="button-content">
-                  <i className="fa-solid fa-plus" />
-                  Education
-                </h4>
-              </button>
-            </div>
-          </div>
+          <AddEducationSection
+            educations={educations}
+            isClosed={isEducationClosed}
+            onChange={this.handleEducationChange}
+            createForm={this.createEducationForm}
+            toggleClosed={this.toggleEducationClosed}
+          />
         </form>
         <Resume
           fullName={fullName}
