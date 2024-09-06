@@ -4,15 +4,20 @@ import "../styles/AddEducationSection.css";
 
 class AddEducationSection extends Component {
   render() {
-    const { educations, isClosed, onChange, createForm, toggleClosed } =
-      this.props;
+    const {
+      educations,
+      isClosed,
+      onChange,
+      createForm,
+      toggleClosed,
+      onCancel,
+      onSave,
+      onOpen,
+      onHide,
+    } = this.props;
     return (
       <div className="add-education-section">
-        <button
-          className="expand-add-education-section"
-          type="button"
-          onClick={toggleClosed}
-        >
+        <button className="expand-add-education-section" onClick={toggleClosed}>
           <h2 className="add-education-header">
             <i className="fa-solid fa-graduation-cap" />
             Education
@@ -21,13 +26,16 @@ class AddEducationSection extends Component {
         </button>
 
         <div className={`education-content ${isClosed}`}>
-          <EducationForms educations={educations} onChange={onChange} />
+          <EducationForms
+            educations={educations}
+            onChange={onChange}
+            onCancel={onCancel}
+            onSave={onSave}
+            onOpen={onOpen}
+            onHide={onHide}
+          />
 
-          <button
-            className="create-education-form"
-            type="button"
-            onClick={createForm}
-          >
+          <button className="create-education-form" onClick={createForm}>
             <h4 className="button-content">
               <i className="fa-solid fa-plus" />
               Education

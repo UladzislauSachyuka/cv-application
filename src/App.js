@@ -15,6 +15,7 @@ class App extends Component {
       address: "",
       educations: [],
       isEducationClosed: "closed",
+      prevState: "",
     };
   }
 
@@ -42,8 +43,11 @@ class App extends Component {
       location: "",
       startDate: "",
       endDate: "",
+      isCollapsed: false,
+      isHidden: false,
       id: uniqid(),
     };
+    this.setState({ prevState: Object.assign({}, education) });
     this.setState({
       educations: [...educations, education],
     });
@@ -56,6 +60,36 @@ class App extends Component {
     });
   };
 
+  cancelEducationForm = (e) => {
+    const { educations } = this.state;
+    const id = e.target.closest(".form").id;
+    this.setState({
+      educations: educations.map((education) => {
+        if (education.id === id) {
+          education = this.state.prevState;
+          education.isCollapsed = true;
+        }
+        return education;
+      }),
+    });
+  };
+
+  setItem = (e, key) => {
+    const { educations } = this.state;
+    const id = e.target.closest(".form").id;
+    this.setState({
+      educations: educations.map((education) => {
+        if (education.id === id) {
+          this.setState({ prevState: Object.assign({}, education) });
+          education[key] = !education[key];
+        }
+        return education;
+      }),
+    });
+  };
+
+  toggleFormOpen = (e) => this.setItem(e, "isCollapsed");
+  toggleHidden = (e) => this.setItem(e, "isHidden");
 
   render() {
     const {
@@ -68,7 +102,7 @@ class App extends Component {
     } = this.state;
     return (
       <div className="app">
-        <form action="">
+        <div className="form-container">
           <PersonalDetails
             onChange={this.handleChange}
             fullName={fullName}
@@ -82,8 +116,11 @@ class App extends Component {
             onChange={this.handleEducationChange}
             createForm={this.createEducationForm}
             toggleClosed={this.toggleEducationClosed}
+            onCancel={this.cancelEducationForm}
+            onSave={this.toggleFormOpen}
+            onHide={this.toggleHidden}
           />
-        </form>
+        </div>
         <Resume
           fullName={fullName}
           email={email}
