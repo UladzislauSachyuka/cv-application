@@ -36,6 +36,8 @@ class AddExperienceSection extends Component {
             onHide={onHide}
             onRemove={onRemove}
             FormComponent={ExperienceForm}
+            titleKey="companyName"
+            arrayName="experiences"
           />
 
           <CreateForm onClick={createForm} buttonText="Experience" />

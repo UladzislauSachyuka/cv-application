@@ -178,6 +178,7 @@ class App extends Component {
           phoneNumber={phoneNumber}
           address={address}
           educations={educations}
+          experiences={experiences}
         />
       </div>
     );
