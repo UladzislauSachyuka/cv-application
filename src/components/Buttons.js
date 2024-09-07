@@ -1,27 +1,22 @@
-import React, { Component } from "react";
 import "../styles/Buttons.css";
 
-class Buttons extends Component {
-  render() {
-    const { cancel, save, remove } = this.props;
-
-    return (
-      <div className="buttons">
-        <button className="delete" onClick={remove} type="button">
-          <i className="fa-solid fa-trash" />
-          Delete
+function Buttons({ cancel, save, remove }) {
+  return (
+    <div className="buttons">
+      <button className="delete" onClick={remove} type="button">
+        <i className="fa-solid fa-trash" />
+        Delete
+      </button>
+      <div className="main-buttons">
+        <button className="cancel" onClick={cancel} type="button">
+          Cancel
         </button>
-        <div className="main-buttons">
-          <button className="cancel" onClick={cancel} type="button">
-            Cancel
-          </button>
-          <button className="save" onClick={save} type="submit">
-            Save
-          </button>
-        </div>
+        <button className="save" onClick={save} type="submit">
+          Save
+        </button>
       </div>
-    );
-  }
+    </div>
+  );
 }
 
 export default Buttons;

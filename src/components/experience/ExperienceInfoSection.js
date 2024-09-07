@@ -1,19 +1,16 @@
-import React, { Component } from "react";
-import "../../styles/ExperienceInfoSection.css";
 import ExperienceInfo from "./ExperienceInfo";
-import DisplayInfo from "../DisplayInfoSection";
-import ResumeHeaderSection from "../ResumeHeaderSection";
+import DisplaySection from "../DisplaySection";
 
-class ExperienceInfoSection extends Component {
-  render() {
-    const { experiences } = this.props;
-    return (
-      <div className="education-info-section resume-section">
-        {!!experiences.length && <ResumeHeaderSection title="Experiences" />}
-        <DisplayInfo array={experiences} InfoComponent={ExperienceInfo} />
-      </div>
-    );
-  }
+function ExperienceInfoSection({ experiences }) {
+  return (
+    <div className="experience-info-section resume-section">
+      <DisplaySection
+        array={experiences}
+        InfoComponent={ExperienceInfo}
+        title="Professional Experience"
+      />
+    </div>
+  );
 }
 
 export default ExperienceInfoSection;
