@@ -1,0 +1,49 @@
+.section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: white;
+  border-radius: 12px;
+}
+
+.section-content {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+.section-content.closed {
+  display: none;
+}
+
+.chevron {
+  transition: transform 0.3s;
+}
+
+.chevron.closed {
+  transform: rotate(-180deg);
+}
+
+.section-form:not(.collapsed-form) {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background-color: white;
+  position: absolute;
+  width: 100%;
+  top: 0;
+  z-index: 1;
+}
+
+.forms-container {
+  width: 100%;
+}
+
+.dates-group {
+  display: flex;
+  gap: 16px;
+  width: 100%;
+  flex-wrap: wrap;
+}

@@ -2,36 +2,44 @@ import React, { Component } from "react";
 import InputGroup from "../InputGroup";
 import Buttons from "../Buttons";
 
-class EducationForm extends Component {
+class ExperienceForm extends Component {
   render() {
-    const { degree, schoolName, location, startDate, endDate, id } =
-      this.props.form;
+    const {
+      companyName,
+      positionTitle,
+      location,
+      description,
+      startDate,
+      endDate,
+      id,
+    } = this.props.form;
 
     const { onChange, cancel, save, remove } = this.props;
+
     return (
       <form
-        className="education-form section-form"
+        className="experience-form section-form"
         id={id}
-        data-array-name="educations"
+        data-array-name="experiences"
         onSubmit={(e) => e.preventDefault()}
       >
         <InputGroup
           type="text"
-          id="school-name"
-          labelText="School"
-          placeholder="Enter school / university"
-          value={schoolName}
+          id="company-name"
+          labelText="Company Name"
+          placeholder="Enter Company Name"
+          value={companyName}
           onChange={onChange}
-          data-key="schoolName"
+          data-key="companyName"
         />
         <InputGroup
           type="text"
-          id="degree"
-          labelText="Degree"
-          placeholder="Enter Degree / Field Of Study"
-          value={degree}
+          id="position-title"
+          labelText="Position Title"
+          placeholder="Enter Position Title"
+          value={positionTitle}
           onChange={onChange}
-          data-key="degree"
+          data-key="positionTitle"
         />
         <div className="dates-group">
           <InputGroup
@@ -63,10 +71,20 @@ class EducationForm extends Component {
           data-key="location"
           optional
         />
+        <InputGroup
+          type="text"
+          id="description"
+          labelText="description"
+          placeholder="Enter Description"
+          value={description}
+          onChange={onChange}
+          data-key="description"
+          optional
+        />
         <Buttons save={save} cancel={cancel} remove={remove} />
       </form>
     );
   }
 }
 
-export default EducationForm;
+export default ExperienceForm;
