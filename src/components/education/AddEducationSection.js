@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import EducationForms from "./EducationForms";
-import ExpandSection from "./ExpandSection";
-import CreateForm from "./CreateForm";
-import "../styles/AddEducationSection.css";
+import ExpandSection from "../ExpandSection";
+import CreateForm from "../CreateForm";
+import "../../styles/AddEducationSection.css";
 
 class AddEducationSection extends Component {
   render() {
@@ -11,7 +11,7 @@ class AddEducationSection extends Component {
       isClosed,
       onChange,
       createForm,
-      toggleClosed,
+      setOpen,
       onCancel,
       toggleCollapsed,
       onOpen,
@@ -19,14 +19,15 @@ class AddEducationSection extends Component {
       onRemove,
     } = this.props;
     return (
-      <div className="add-education-section">
+      <div className="add-education-section section">
         <ExpandSection
           isClosed={isClosed}
-          toggleClosed={toggleClosed}
+          setOpen={setOpen}
           sectionName="Education"
+          iconName="fa-solid fa-graduation-cap"
         />
 
-        <div className={`education-content ${isClosed}`}>
+        <div className={`section-content ${isClosed}`}>
           <EducationForms
             educations={educations}
             onChange={onChange}

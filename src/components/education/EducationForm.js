@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import InputGroup from "./InputGroup";
+import InputGroup from "../InputGroup";
 
 class EducationForm extends Component {
   render() {
@@ -19,6 +19,7 @@ class EducationForm extends Component {
       <form
         className="education-form form"
         id={id}
+        data-array-name="educations"
         onSubmit={(e) => e.preventDefault()}
       >
         <InputGroup

@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import '../styles/Resume.css';
 import "@fortawesome/fontawesome-free/css/all.min.css";
-import PersonalInfoSection from "./PersonalInfoSection";
-import EducationInfoSection from "./EducationInfoSection";
+import PersonalInfoSection from "./personal-info/PersonalInfoSection";
+import EducationInfoSection from "./education/EducationInfoSection";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 
 class Resume extends Component {

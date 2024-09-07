@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import './styles/App.css';
-import PersonalDetails from './components/PersonalDetails';
-import AddEducationSection from './components/AddEducationSection';
+import PersonalDetails from "./components/personal-info/PersonalDetails";
+import AddEducationSection from "./components/education/AddEducationSection";
+import AddExperienceSection from "./components/experience/AddExperienceSection";
 import Resume from './components/Resume';
 import uniqid from "uniqid";
 
@@ -14,7 +15,8 @@ class App extends Component {
       phoneNumber: "",
       address: "",
       educations: [],
-      isEducationClosed: "closed",
+      experiences: [],
+      sectionOpen: "",
       prevState: "",
     };
   }
@@ -23,23 +25,34 @@ class App extends Component {
     this.setState({ prevState: Object.assign({}, prevState) });
 
   handleChange = (e) => {
-    const key = e.target.getAttribute("data-key");
+    const { key } = e.target.dataset;
     this.setState({ [key]: e.target.value });
   };
 
-  handleEducationChange = (e) => {
-    const key = e.target.getAttribute("data-key");
-    const id = e.target.closest(".education-form").id;
-    const { educations } = this.state;
-    const modified = educations.map((education) => {
-      if (education.id === id) education[key] = e.target.value;
-      return education;
+  handleSectionChange = (e) => {
+    const { key } = e.target.dataset;
+    const form = e.target.closest(".form");
+    const { id } = form;
+    const { arrayName } = form.dataset;
+    const array = this.state[arrayName];
+
+    this.setState({
+      [arrayName]: array.map((obj) => {
+        if (obj.id === id) obj[key] = e.target.value;
+        return obj;
+      }),
     });
-    this.setState({ educations: modified });
+  };
+
+  createForm = (arrayName, object) => {
+    this.setPrevState(object);
+    const array = this.state[arrayName];
+    this.setState({
+      [arrayName]: [...array, object],
+    });
   };
 
   createEducationForm = () => {
-    const { educations } = this.state;
     const education = {
       degree: "",
       schoolName: "",
@@ -50,55 +63,69 @@ class App extends Component {
       isHidden: false,
       id: uniqid(),
     };
-    this.setPrevState(education);
-    this.setState({
-      educations: [...educations, education],
-    });
+    this.createForm("educations", education);
   };
 
-  toggleEducationClosed = () => {
-    const { isEducationClosed } = this.state;
-    this.setState({
-      isEducationClosed: isEducationClosed ? "" : "closed",
-    });
+  createExperienceForm = () => {
+    const experience = {
+      companyName: "",
+      positionTitle: "",
+      location: "",
+      description: "",
+      startDate: "",
+      endDate: "",
+      isCollapsed: false,
+      isHidden: false,
+      id: uniqid(),
+    };
+    this.createForm("experiences", experience);
   };
 
-  cancelEducationForm = (e) => {
-    const { educations } = this.state;
-    const id = e.target.closest(".form").id;
+  setOpen = (sectionName) => this.setState({ sectionOpen: sectionName });
+
+  cancelForm = (e) => {
+    const form = e.target.closest(".form");
+    const { id } = form;
+    const { arrayName } = form.dataset;
+    const array = this.state[arrayName];
     this.setState({
-      educations: educations.map((education) => {
-        if (education.id === id) {
-          education = this.state.prevState;
-          education.isCollapsed = true;
+      [arrayName]: array.map((object) => {
+        if (object.id === id) {
+          object = this.state.prevState;
+          object.isCollapsed = true;
         }
-        return education;
+        return object;
       }),
     });
   };
 
   toggleValue = (e, key) => {
-    const { educations } = this.state;
-    const id = e.target.closest(".form").id;
+    const form = e.target.closest(".form");
+    const { id } = form;
+    const { arrayName } = form.dataset;
+    const array = this.state[arrayName];
     this.setState({
-      educations: educations.map((education) => {
-        if (education.id === id) {
-          this.setPrevState(education);
-          education[key] = !education[key];
+      [arrayName]: array.map((object) => {
+        if (object.id === id) {
+          this.setPrevState(object);
+          object[key] = !object[key];
         }
-        return education;
+
+        return object;
       }),
     });
   };
 
   toggleCollapsed = (e) => this.toggleValue(e, "isCollapsed");
   toggleHidden = (e) => this.toggleValue(e, "isHidden");
-  removeForm = (e) => {
-    const { educations } = this.state;
-    const id = e.target.closest(".form").id;
-    console.log(educations.filter((education) => education.id !== id));
+
+  removeItem = (e) => {
+    const form = e.target.closest(".form");
+    const { arrayName } = form.dataset;
+    const array = this.state[arrayName];
+    const { id } = form;
     this.setState({
-      educations: educations.filter((education) => education.id !== id),
+      [arrayName]: array.filter((item) => item.id !== id),
     });
   };
 
@@ -109,7 +136,8 @@ class App extends Component {
       phoneNumber,
       address,
       educations,
-      isEducationClosed,
+      experiences,
+      sectionOpen,
     } = this.state;
     return (
       <div className="app">
@@ -123,14 +151,25 @@ class App extends Component {
           />
           <AddEducationSection
             educations={educations}
-            isClosed={isEducationClosed}
-            onChange={this.handleEducationChange}
+            isClosed={sectionOpen !== "Education" ? "closed" : ""}
+            onChange={this.handleSectionChange}
             createForm={this.createEducationForm}
-            toggleClosed={this.toggleEducationClosed}
-            onCancel={this.cancelEducationForm}
+            setOpen={this.setOpen}
+            onCancel={this.cancelForm}
             toggleCollapsed={this.toggleCollapsed}
             onHide={this.toggleHidden}
-            onRemove={this.removeForm}
+            onRemove={this.removeItem}
+          />
+          <AddExperienceSection
+            experiences={experiences}
+            isClosed={sectionOpen !== "Experience" ? "closed" : ""}
+            onChange={this.handleSectionChange}
+            createForm={this.createExperienceForm}
+            setOpen={this.setOpen}
+            onCancel={this.cancelForm}
+            toggleCollapsed={this.toggleCollapsed}
+            onHide={this.toggleHidden}
+            onRemove={this.removeItem}
           />
         </div>
         <Resume
