@@ -5,7 +5,7 @@ import DisplayForms from "../DisplayForms";
 import ExperienceForm from "./ExperienceForm";
 
 function AddExperienceSection({
-  isClosed,
+  isOpen,
   createForm,
   setOpen,
   experiences,
@@ -18,12 +18,13 @@ function AddExperienceSection({
   return (
     <div className="add-experience-section section">
       <ExpandSection
-        isClosed={isClosed}
+        isOpen={isOpen}
         setOpen={setOpen}
         sectionName="Experience"
         iconName="fa-solid fa-briefcase"
       />
-      <div className={`section-content ${isClosed}`}>
+
+      <div className={`section-content ${isOpen ? "open" : ""}`}>
         <DisplayForms
           forms={experiences}
           onChange={onChange}
@@ -35,6 +36,7 @@ function AddExperienceSection({
           titleKey="companyName"
           arrayName="experiences"
         />
+
         <CreateForm onClick={createForm} buttonText="Experience" />
       </div>
     </div>

@@ -4,6 +4,7 @@ import Buttons from "../Buttons";
 function EducationForm(props) {
   const { degree, schoolName, location, startDate, endDate, id } = props.form;
   const { onChange, cancel, save, remove } = props;
+
   return (
     <form
       className="education-form section-form"

@@ -12,6 +12,7 @@ function EducationInfo({ info }) {
         </p>
         <p>{location}</p>
       </div>
+
       <div className="education-info-group">
         <p className="education-info-schoolName">{schoolName}</p>
         <p className="education-info-degree">{degree}</p>

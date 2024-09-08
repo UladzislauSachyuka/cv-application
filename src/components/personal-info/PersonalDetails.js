@@ -1,4 +1,4 @@
-import InputGroup from "..InputGroup";
+import InputGroup from "../InputGroup";
 import "../../styles/PersonalDetails.css";
 
 function PersonalDetails({ onChange, email, fullName, phoneNumber, address }) {
@@ -47,5 +47,4 @@ function PersonalDetails({ onChange, email, fullName, phoneNumber, address }) {
     </form>
   );
 }
-
 export default PersonalDetails;

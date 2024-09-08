@@ -18,6 +18,7 @@ function InputGroup({
         {optional && <span className="optional-text">optional</span>}
         {recommended && <span className="recommended-text">recommended</span>}
       </label>
+
       {type === "textarea" ? (
         <textarea
           id={id}

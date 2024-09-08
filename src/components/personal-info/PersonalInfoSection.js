@@ -11,12 +11,14 @@ function PersonalInfoSection({ email, fullName, phoneNumber, address }) {
             <span>{email}</span>
           </div>
         )}
+
         {phoneNumber && (
           <div>
             <i className="fa-solid fa-phone" />
             <span>{phoneNumber}</span>
           </div>
         )}
+
         {address && (
           <div>
             <i className="fa-solid fa-location-dot" />

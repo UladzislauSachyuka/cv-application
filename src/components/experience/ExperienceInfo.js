@@ -11,6 +11,7 @@ function ExperienceInfo({ info }) {
         </p>
         <p>{info.location}</p>
       </div>
+
       <div className="experience-info-group">
         <p className="experience-info-companyName">{info.companyName}</p>
         <p className="experience-info-positionTitle">{info.positionTitle}</p>

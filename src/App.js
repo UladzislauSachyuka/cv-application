@@ -1,56 +1,54 @@
-import { Component } from 'react';
-import './styles/App.css';
+import { useState } from "react";
+import "./styles/App.css";
 import PersonalDetails from "./components/personal-info/PersonalDetails";
 import AddEducationSection from "./components/education/AddEducationSection";
 import AddExperienceSection from "./components/experience/AddExperienceSection";
-import Resume from './components/Resume';
+import Resume from "./components/Resume";
 import uniqid from "uniqid";
+import TemplateLoader from "./components/TemplateLoader";
+import exampleData from "./example-data";
+import Sidebar from "./components/Sidebar";
+import Customize from "./components/Customize";
 
-class App extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      fullName: "",
-      email: "",
-      phoneNumber: "",
-      address: "",
-      educations: [],
-      experiences: [],
-      sectionOpen: "",
-      prevState: "",
-    };
+function App() {
+  const [personalInfo, setPersonalInfo] = useState(exampleData.personalInfo);
+  const [sections, setSections] = useState(exampleData.sections);
+  const [sectionOpen, setSectionOpen] = useState(null);
+  const [currentPage, setCurrentPage] = useState("content");
+  const [resumeLayout, setResumeLayout] = useState("top");
+  // Store prevState to revert changes when user clicks "cancel"
+  const [prevState, setPrevState] = useState(null);
+  function handlePersonalInfoChange(e) {
+    const { key } = e.target.dataset;
+    setPersonalInfo({ ...personalInfo, [key]: e.target.value });
   }
 
-  handleChange = (e) => {
+  function handleSectionChange(e) {
     const { key } = e.target.dataset;
-    this.setState({ [key]: e.target.value });
-  };
-
-  handleSectionChange = (e) => {
-    const { key } = e.target.dataset;
+    const inputValue = e.target.value;
     const form = e.target.closest(".section-form");
     const { id } = form;
     const { arrayName } = form.dataset;
-    const array = this.state[arrayName];
-
-    this.setState({
-      [arrayName]: array.map((obj) => {
-        if (obj.id === id) obj[key] = e.target.value;
+    const section = sections[arrayName];
+    setSections({
+      ...sections,
+      [arrayName]: section.map((obj) => {
+        if (obj.id === id) obj[key] = inputValue;
         return obj;
       }),
     });
-  };
+  }
 
-  createForm = (arrayName, object) => {
-    this.setState({ prevState: null });
-    const array = this.state[arrayName];
-    this.setState({
-      [arrayName]: [...array, object],
-    });
-  };
+  function createForm(arrayName, object) {
+    setPrevState(null);
+    // Clone array to not push object to original
+    const section = structuredClone(sections[arrayName]);
+    section.push(object);
+    setSections({ ...sections, [arrayName]: section });
+  }
 
-  createEducationForm = () => {
-    const education = {
+  const createEducationForm = () =>
+    createForm("educations", {
       degree: "",
       schoolName: "",
       location: "",
@@ -59,12 +57,10 @@ class App extends Component {
       isCollapsed: false,
       isHidden: false,
       id: uniqid(),
-    };
-    this.createForm("educations", education);
-  };
+    });
 
-  createExperienceForm = () => {
-    const experience = {
+  const createExperienceForm = () =>
+    createForm("experiences", {
       companyName: "",
       positionTitle: "",
       location: "",
@@ -74,119 +70,137 @@ class App extends Component {
       isCollapsed: false,
       isHidden: false,
       id: uniqid(),
-    };
-    this.createForm("experiences", experience);
-  };
+    });
 
-  setOpen = (sectionName) => this.setState({ sectionOpen: sectionName });
+  const setOpen = (sectionName) => setSectionOpen(sectionName);
+  function removeForm(e) {
+    const form = e.target.closest(".section-form");
+    const { arrayName } = form.dataset;
+    const section = sections[arrayName];
+    const { id } = form;
 
-  cancelForm = (e) => {
-    const { prevState } = this.state;
+    setSections({
+      ...sections,
+      [arrayName]: section.filter((item) => item.id !== id),
+    });
+  }
+
+  function cancelForm(e) {
     // if no prevState found remove form
-    if (!prevState) {
-      this.removeForm(e);
+    if (prevState == null) {
+      removeForm(e);
       return;
     }
 
-    const form = e.target.closest(".section-form");
-    const { id } = form;
-    const { arrayName } = form.dataset;
-    const array = this.state[arrayName];
-    this.setState({
-      [arrayName]: array.map((object) => {
-        if (object.id === id) {
-          object = prevState;
-          object.isCollapsed = true;
-        }
-        return object;
-      }),
-    });
-  };
+    const sectionForm = e.target.closest(".section-form");
+    const { id } = sectionForm;
+    const { arrayName } = sectionForm.dataset;
+    const section = sections[arrayName];
 
-  toggleValue = (e, key) => {
-    const form = e.target.closest(".section-form");
-    const { id } = form;
-    const { arrayName } = form.dataset;
-    const array = this.state[arrayName];
-    this.setState({
-      [arrayName]: array.map((object) => {
-        if (object.id === id) {
-          this.setState({ prevState: Object.assign({}, object) });
-          object[key] = !object[key];
+    setSections({
+      ...sections,
+      [arrayName]: section.map((form) => {
+        if (form.id === id) {
+          // Revert back to previous state
+          form = prevState;
+          form.isCollapsed = true;
         }
 
-        return object;
+        return form;
       }),
     });
-  };
+  }
 
-  toggleCollapsed = (e) => this.toggleValue(e, "isCollapsed");
-  toggleHidden = (e) => this.toggleValue(e, "isHidden");
+  function toggleValue(e, key) {
+    const sectionForm = e.target.closest(".section-form");
+    const { id } = sectionForm;
+    const { arrayName } = sectionForm.dataset;
+    const section = sections[arrayName];
+    setSections({
+      ...sections,
+      [arrayName]: section.map((form) => {
+        if (form.id === id) {
+          setPrevState(Object.assign({}, form));
+          form[key] = !form[key];
+        }
 
-  removeForm = (e) => {
-    const form = e.target.closest(".section-form");
-    const { arrayName } = form.dataset;
-    const array = this.state[arrayName];
-    const { id } = form;
-    this.setState({
-      [arrayName]: array.filter((item) => item.id !== id),
+        return form;
+      }),
     });
-  };
+  }
 
-  render() {
-    const {
-      fullName,
-      email,
-      phoneNumber,
-      address,
-      educations,
-      experiences,
-      sectionOpen,
-    } = this.state;
-    return (
-      <div className="app">
+  const toggleCollapsed = (e) => toggleValue(e, "isCollapsed");
+  const toggleHidden = (e) => toggleValue(e, "isHidden");
+
+  return (
+    <div className="app">
+      <div className="edit-side">
+        <Sidebar onGoToPage={setCurrentPage} page={currentPage} />
         <div className="form-container">
-          <PersonalDetails
-            onChange={this.handleChange}
-            fullName={fullName}
-            email={email}
-            phoneNumber={phoneNumber}
-            address={address}
+          <TemplateLoader
+            onTemplateLoad={() => {
+              setPersonalInfo(exampleData.personalInfo);
+              setSections(exampleData.sections);
+            }}
+            onClear={() => {
+              setPersonalInfo({
+                fullName: "",
+                email: "",
+                phoneNumber: "",
+                address: "",
+              });
+              setSections({ educations: [], experiences: [] });
+              setPrevState(null);
+            }}
           />
-          <AddEducationSection
-            educations={educations}
-            isClosed={sectionOpen === "Education" ? "" : "closed"}
-            onChange={this.handleSectionChange}
-            createForm={this.createEducationForm}
-            setOpen={this.setOpen}
-            onCancel={this.cancelForm}
-            toggleCollapsed={this.toggleCollapsed}
-            onHide={this.toggleHidden}
-            onRemove={this.removeForm}
-          />
-          <AddExperienceSection
-            experiences={experiences}
-            isClosed={sectionOpen === "Experience" ? "" : "closed"}
-            onChange={this.handleSectionChange}
-            createForm={this.createExperienceForm}
-            setOpen={this.setOpen}
-            onCancel={this.cancelForm}
-            toggleCollapsed={this.toggleCollapsed}
-            onHide={this.toggleHidden}
-            onRemove={this.removeForm}
+          {currentPage === "content" && (
+            <>
+              <PersonalDetails
+                onChange={handlePersonalInfoChange}
+                fullName={personalInfo.fullName}
+                email={personalInfo.email}
+                phoneNumber={personalInfo.phoneNumber}
+                address={personalInfo.address}
+              />
+              <AddEducationSection
+                educations={sections.educations}
+                isOpen={sectionOpen === "Education"}
+                onChange={handleSectionChange}
+                createForm={createEducationForm}
+                setOpen={setOpen}
+                onCancel={cancelForm}
+                toggleCollapsed={toggleCollapsed}
+                onHide={toggleHidden}
+                onRemove={removeForm}
+              />
+              <AddExperienceSection
+                experiences={sections.experiences}
+                isOpen={sectionOpen === "Experience"}
+                onChange={handleSectionChange}
+                createForm={createExperienceForm}
+                setOpen={setOpen}
+                onCancel={cancelForm}
+                toggleCollapsed={toggleCollapsed}
+                onHide={toggleHidden}
+                onRemove={removeForm}
+              />
+            </>
+          )}
+
+          <Customize
+            isShown={currentPage === "customize"}
+            onColChange={setResumeLayout}
           />
         </div>
-        <Resume
-          fullName={fullName}
-          email={email}
-          phoneNumber={phoneNumber}
-          address={address}
-          educations={educations}
-          experiences={experiences}
-        />
       </div>
-    );
-  }
+
+      <Resume
+        personalInfo={personalInfo}
+        sections={sections}
+        layout={resumeLayout}
+      />
+    </div>
+  );
 }
 
 export default App;
